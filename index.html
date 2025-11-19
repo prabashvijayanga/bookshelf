@@ -4,7 +4,22 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>bookshelf</title>
+    <meta name="description" content="BookShelf - Your personal library manager. Search, organize, and track your reading journey." />
+    <title>BookShelf - Personal Library Manager</title>
+    
+    <!-- Auto-redirect to hash route -->
+    <script type="text/javascript">
+      (function() {
+        // If visiting base URL without hash, add #/
+        if (window.location.pathname.endsWith('/bookshelf/') && !window.location.hash) {
+          window.location.replace(window.location.href.replace(/\/$/, '') + '/#/');
+        }
+        // If visiting /bookshelf without trailing slash
+        else if (window.location.pathname.endsWith('/bookshelf') && !window.location.hash) {
+          window.location.replace(window.location.href + '/#/');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
