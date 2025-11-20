@@ -1,18 +1,18 @@
 import axios from 'axios'
 
-const API_BASE_URL = 'https://www.googleapis.com/books/v1'
-const API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API_KEY || ''
+// Vercel backend URL
+const API_BASE_URL = 'https://bookshelf-backend-omega.vercel.app/api/books'
 
 const googleBooksApi = {
   searchBooks: async (query, maxResults = 20, startIndex = 0) => {
     try {
       const params = {
+        endpoint: 'volumes',
         q: query,
         maxResults,
         startIndex,
-        key: API_KEY,
       }
-      const response = await axios.get(`${API_BASE_URL}/volumes`, { params })
+      const response = await axios.get(API_BASE_URL, { params })
       return response.data
     } catch (error) {
       console.error('Error searching books:', error)
@@ -22,8 +22,10 @@ const googleBooksApi = {
 
   getBookById: async (bookId) => {
     try {
-      const params = API_KEY ? { key: API_KEY } : {}
-      const response = await axios.get(`${API_BASE_URL}/volumes/${bookId}`, { params })
+      const params = {
+        endpoint: `volumes/${bookId}`,
+      }
+      const response = await axios.get(API_BASE_URL, { params })
       return response.data
     } catch (error) {
       console.error('Error fetching book details:', error)
@@ -34,11 +36,11 @@ const googleBooksApi = {
   searchByCategory: async (category, maxResults = 20) => {
     try {
       const params = {
+        endpoint: 'volumes',
         q: `subject:${category}`,
         maxResults,
-        key: API_KEY,
       }
-      const response = await axios.get(`${API_BASE_URL}/volumes`, { params })
+      const response = await axios.get(API_BASE_URL, { params })
       return response.data
     } catch (error) {
       console.error('Error searching by category:', error)
@@ -49,12 +51,12 @@ const googleBooksApi = {
   getTrendingBooks: async () => {
     try {
       const params = {
+        endpoint: 'volumes',
         q: 'bestseller',
         maxResults: 20,
         orderBy: 'relevance',
-        key: API_KEY,
       }
-      const response = await axios.get(`${API_BASE_URL}/volumes`, { params })
+      const response = await axios.get(API_BASE_URL, { params })
       return response.data
     } catch (error) {
       console.error('Error fetching trending books:', error)
