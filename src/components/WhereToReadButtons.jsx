@@ -119,9 +119,9 @@ const WhereToReadButtons = ({ book }) => {
               // Get the real EPUB link from Google Books API
               const realEpubLink = book.accessInfo?.epub?.downloadLink;
               
-              // Wrap it in your custom Vercel backend proxy
+              // කෙටි ලින්ක් එක පාවිච්චි කරන්න, මොකද දැන් සේරම එකම තැන නිසා
               const proxiedLink = realEpubLink 
-                ? `https://bookshelf-backend-omega.vercel.app/api/proxy?url=${encodeURIComponent(realEpubLink)}` 
+                ? `/api/proxy?url=${encodeURIComponent(realEpubLink)}` 
                 : null;
               
               navigate(`/read/${book.id}`, { 
