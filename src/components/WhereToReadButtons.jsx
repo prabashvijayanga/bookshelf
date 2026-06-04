@@ -111,17 +111,23 @@ const WhereToReadButtons = ({ book }) => {
         )}
 
         {/* Project Gutenberg / Public Domain - IN APP READER */}
+        {/* Project Gutenberg / Public Domain - IN APP READER */}
         {links.gutenberg && (
           <Button
             variant="contained"
             startIcon={<ImportContactsOutlined />}
             onClick={() => {
-              // Get the real EPUB link from Google Books API
-              const realEpubLink = book.accessInfo?.epub?.downloadLink;
+              // Google Books API එකෙන් එන ලින්ක් එක ගන්නවා
+              let realEpubLink = book.accessInfo?.epub?.downloadLink;
               
-              // කෙටි ලින්ක් එක පාවිච්චි කරන්න, මොකද දැන් සේරම එකම තැන නිසා
+              // 1. Google එකෙන් දෙන ලින්ක් එකේ http:// තියෙනවා නම් ඒක බලෙන් https:// කරනවා
+              if (realEpubLink && realEpubLink.startsWith('http://')) {
+                realEpubLink = realEpubLink.replace('http://', 'https://');
+              }
+              
+              // 2. Reader එකට අවුලක් නැතුව හොයාගන්න සම්පූර්ණ (Absolute) URL එකම හදනවා
               const proxiedLink = realEpubLink 
-                ? `/api/proxy?url=${encodeURIComponent(realEpubLink)}` 
+                ? `${window.location.origin}/api/proxy?url=${encodeURIComponent(realEpubLink)}` 
                 : null;
               
               navigate(`/read/${book.id}`, { 
@@ -131,6 +137,7 @@ const WhereToReadButtons = ({ book }) => {
                 } 
               })
             }}
+            
             fullWidth
             sx={{
               bgcolor: 'text.primary',
