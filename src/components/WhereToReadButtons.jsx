@@ -1,18 +1,19 @@
-import { Box, Button, Stack, Typography, Paper, Divider } from '@mui/material'
+import { useState } from 'react' // 🆕 useState import කරන්න
+import { Box, Button, Stack, Typography, Paper, Divider, CircularProgress } from '@mui/material'
 import {
   ShoppingCartOutlined,
   MenuBookOutlined,
-  LocalLibraryOutlined,
-  VisibilityOutlined,
   ImportContactsOutlined,
   TravelExploreOutlined,
+  VisibilityOutlined
 } from '@mui/icons-material'
-import { getReadingLinks } from '../utils/helpers'
+import { getReadingLinks, getGutendexEpubLink } from '../utils/helpers' // 🆕 Helper එක import කරන්න
 import { useNavigate } from 'react-router-dom'
 
 const WhereToReadButtons = ({ book }) => {
   const navigate = useNavigate()
   const links = getReadingLinks(book)
+  const [isLoadingReader, setIsLoadingReader] = useState(false) // 🆕 Loading state එක
 
   if (Object.keys(links).length === 0) {
     return null
@@ -28,6 +29,36 @@ const WhereToReadButtons = ({ book }) => {
       borderColor: 'text.primary',
       backgroundColor: 'rgba(255,255,255,0.05)',
     },
+  }
+
+  // 🆕 Button Click Handler එක
+  const handleOpenInAppReader = async () => {
+    setIsLoadingReader(true);
+    try {
+      const title = book.volumeInfo?.title;
+      // 1. Gutendex එකෙන් සැබෑ ලින්ක් එක ගන්නවා
+      const rawEpubUrl = await getGutendexEpubLink(title);
+      
+      if (rawEpubUrl) {
+        // 2. ඒ ලින්ක් එක අපේ Vercel Proxy එක හරහා යන්න හදනවා (CORS බයිපාස් කරන්න)
+        const proxiedUrl = `/api/proxy?url=${encodeURIComponent(rawEpubUrl)}`;
+        
+        // 3. Reader පිටුවට යවනවා
+        navigate(`/read/${book.id}`, { 
+          state: { 
+            title: title,
+            epubUrl: proxiedUrl 
+          } 
+        });
+      } else {
+        alert("Sorry, we couldn't find the EPUB file for this specific book on Project Gutenberg.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error loading the book.");
+    } finally {
+      setIsLoadingReader(false);
+    }
   }
 
   return (
@@ -50,20 +81,14 @@ const WhereToReadButtons = ({ book }) => {
 
       <Stack spacing={1.5}>
         
-        {/* 🌟 IN-APP READER (Public Domain නම් විතරක් පෙන්නනවා) 🌟 */}
+        {/* 🌟 IN-APP READER (Dynamic) 🌟 */}
         {links.inAppEpub && (
           <>
             <Button
               variant="contained"
-              startIcon={<ImportContactsOutlined />}
-              onClick={() => {
-                navigate(`/read/${book.id}`, { 
-                  state: { 
-                    title: book.volumeInfo?.title,
-                    epubUrl: links.inAppEpub // කෙලින්ම වැඩ කරන EPUB ලින්ක් එක යවනවා
-                  } 
-                })
-              }}
+              disabled={isLoadingReader}
+              startIcon={isLoadingReader ? <CircularProgress size={20} color="inherit" /> : <ImportContactsOutlined />}
+              onClick={handleOpenInAppReader}
               fullWidth
               sx={{
                 bgcolor: 'text.primary',
@@ -78,7 +103,7 @@ const WhereToReadButtons = ({ book }) => {
                 },
               }}
             >
-              Read in BookShelf Reader
+              {isLoadingReader ? 'Finding Book...' : 'Read in BookShelf Reader'}
             </Button>
             <Divider sx={{ borderColor: 'rgba(255,255,255,0.05)', my: 1 }} />
           </>

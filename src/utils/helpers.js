@@ -57,6 +57,28 @@ export const isPublicDomain = (accessInfo) => {
   return accessInfo.publicDomain === true || accessInfo.accessViewStatus === 'FULL_PUBLIC_DOMAIN'
 }
 
+// 🆕 අලුතින් එකතු කරන Function එක (Gutendex API එකෙන් EPUB ලින්ක් එක ගන්න)
+export const getGutendexEpubLink = async (title) => {
+  try {
+    // පොතේ නම හරියටම search වෙන්න, title එකේ තියෙන subtitles අයින් කරලා clean කරනවා
+    const cleanTitle = title.split(':')[0].trim();
+    const response = await fetch(`https://gutendex.com/books/?search=${encodeURIComponent(cleanTitle)}`);
+    const data = await response.json();
+
+    if (data.results && data.results.length > 0) {
+      // පළවෙනි result එකේ තියෙන සැබෑ EPUB ලින්ක් එක ගන්නවා
+      const epubUrl = data.results[0].formats['application/epub+zip'];
+      if (epubUrl) {
+        return epubUrl;
+      }
+    }
+    return null;
+  } catch (error) {
+    console.error("Gutendex API Error:", error);
+    return null;
+  }
+}
+
 // Get reading links for a book
 export const getReadingLinks = (book) => {
   const volumeInfo = book.volumeInfo || {}
@@ -65,17 +87,9 @@ export const getReadingLinks = (book) => {
   
   const links = {}
 
-  // Google Books preview/read link
-  if (volumeInfo.previewLink) {
-    links.googlePreview = volumeInfo.previewLink
-  }
+  if (volumeInfo.previewLink) links.googlePreview = volumeInfo.previewLink
+  if (saleInfo.buyLink) links.googlePlay = saleInfo.buyLink
 
-  // Google Play Books (if available for purchase)
-  if (saleInfo.buyLink) {
-    links.googlePlay = saleInfo.buyLink
-  }
-
-  // Amazon link (constructed from ISBN if available)
   const isbn = volumeInfo.industryIdentifiers?.find(
     id => id.type === 'ISBN_13' || id.type === 'ISBN_10'
   )
@@ -83,16 +97,14 @@ export const getReadingLinks = (book) => {
     links.amazon = `https://www.amazon.com/dp/${isbn.identifier}`
   }
 
-  // Direct web reader link (if available)
   if (accessInfo.webReaderLink) {
     links.webReader = accessInfo.webReaderLink
   }
 
-  // Public Domain පොත් සඳහා In-App Reader ලින්ක් එක සහ Gutenberg Search එක
+  // Public Domain පොත් සඳහා
   if (isPublicDomain(accessInfo)) {
-    // සැබෑ EPUB ලින්ක් එකක් (Proxy ඕනේ නෑ, කෙලින්ම වැඩ කරනවා)
-    links.inAppEpub = 'https://react-reader.metabits.no/files/alice.epub';
-    // Gutenberg සයිට් එකේ හොයන්න ලින්ක් එක
+    // ⚠️ Hardcoded ලින්ක් එක අයින් කරලා, In-App Reader එක පෙන්නන්න boolean true එකක් දානවා
+    links.inAppEpub = true; 
     links.gutenbergSearch = `https://www.gutenberg.org/ebooks/search/?query=${encodeURIComponent(volumeInfo.title || '')}`;
   }
 
