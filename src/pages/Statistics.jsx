@@ -10,6 +10,7 @@ import {
   CheckCircle,
   BookmarkAdd,
   LibraryBooks,
+  InsightsOutlined,
 } from '@mui/icons-material'
 import StatCard from '../components/StatCard'
 import ReadingGoal from '../components/ReadingGoal'
@@ -22,7 +23,10 @@ const Statistics = () => {
     wantToRead: [],
     read: [],
   })
-  const [readingGoal, setReadingGoal] = useState({ target: 12, year: 2025 })
+  
+  // Use current year dynamically
+  const currentYear = new Date().getFullYear()
+  const [readingGoal, setReadingGoal] = useState({ target: 12, year: currentYear })
 
   useEffect(() => {
     loadData()
@@ -43,29 +47,19 @@ const Statistics = () => {
   const stats = calculateReadingStats(library)
 
   return (
-    <Container maxWidth="xl" sx={{ py: 6 }}>
+    <Container maxWidth="xl" sx={{ py: { xs: 6, md: 10 } }}>
       {/* Header */}
-      <Box sx={{ mb: 6 }}>
-        <Typography
-          variant="h3"
-          gutterBottom
-          fontWeight="bold"
-          sx={{
-            background: 'linear-gradient(45deg, #5c6bc0 30%, #ff4081 90%)',
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}
-        >
-          Reading Statistics
+      <Box sx={{ mb: 8 }}>
+        <Typography variant="h2" gutterBottom fontWeight="800">
+          Telemetry & Stats
         </Typography>
-        <Typography variant="h6" color="text.secondary">
-          Track your reading progress and achievements
+        <Typography variant="h6" color="text.secondary" sx={{ fontWeight: 400 }}>
+          Monitor your reading trajectory.
         </Typography>
       </Box>
 
       {/* Reading Goal */}
-      <Box sx={{ mb: 4 }}>
+      <Box sx={{ mb: 6 }}>
         <ReadingGoal
           goal={readingGoal}
           booksRead={stats.booksRead}
@@ -74,53 +68,56 @@ const Statistics = () => {
       </Box>
 
       {/* Stats Cards */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+      <Grid container spacing={3} sx={{ mb: 8 }}>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            icon={<LibraryBooks sx={{ fontSize: 40 }} />}
-            title="Total Books"
+            icon={<LibraryBooks sx={{ fontSize: 32 }} />}
+            title="Total Volumes"
             value={stats.totalBooks}
-            color="#5c6bc0"
+            color="#ffffff"
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            icon={<CheckCircle sx={{ fontSize: 40 }} />}
-            title="Books Read (2025)"
+            icon={<CheckCircle sx={{ fontSize: 32 }} />}
+            title={`Completed (${currentYear})`}
             value={stats.booksRead}
-            color="#4caf50"
+            color="#ffffff"
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            icon={<MenuBook sx={{ fontSize: 40 }} />}
-            title="Currently Reading"
+            icon={<MenuBook sx={{ fontSize: 32 }} />}
+            title="Active Reading"
             value={stats.currentlyReading}
-            color="#ff9800"
+            color="#ffffff"
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            icon={<BookmarkAdd sx={{ fontSize: 40 }} />}
-            title="Want to Read"
+            icon={<BookmarkAdd sx={{ fontSize: 32 }} />}
+            title="Backlog"
             value={stats.wantToRead}
-            color="#ff4081"
+            color="#ffffff"
           />
         </Grid>
       </Grid>
 
       {/* Additional Stats */}
-      <Box sx={{ textAlign: 'center', py: 8 }}>
-        <Typography variant="h4" gutterBottom sx={{ fontSize: '4rem' }}>
-          📊
-        </Typography>
-        <Typography variant="h5" gutterBottom fontWeight="bold">
-          Keep Up the Great Work!
+      <Box sx={{ 
+        textAlign: 'center', 
+        py: 8, 
+        border: '1px solid rgba(255,255,255,0.05)', 
+        borderRadius: 2 
+      }}>
+        <InsightsOutlined sx={{ fontSize: 48, color: 'rgba(255,255,255,0.2)', mb: 3 }} />
+        <Typography variant="h5" gutterBottom fontWeight="600">
+          Target Status
         </Typography>
         <Typography variant="body1" color="text.secondary">
           {stats.booksRead >= readingGoal.target
-            ? "You've achieved your reading goal! Set a new challenge."
-            : `Read ${readingGoal.target - stats.booksRead} more books to reach your goal.`}
+            ? "Annual objective completed. Consider expanding your target."
+            : `Delta to annual goal: ${readingGoal.target - stats.booksRead} volumes.`}
         </Typography>
       </Box>
     </Container>

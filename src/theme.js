@@ -4,53 +4,50 @@ const theme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#5c6bc0',
-      light: '#8e99f3',
-      dark: '#26418f',
+      main: '#ffffff', // Stark white for a modern, minimal look
+      light: '#f4f4f5',
+      dark: '#a1a1aa',
     },
     secondary: {
-      main: '#ff4081',
-      light: '#ff79b0',
-      dark: '#c60055',
+      main: '#3b82f6', // Sleek blue accent for subtle interactive elements
     },
     background: {
-      default: '#0a0e27',
-      paper: '#1a1f3a',
+      default: '#09090b', // Zinc 950 - very deep, almost black
+      paper: '#09090b', // Keep paper same as bg, we will separate with borders
     },
     text: {
-      primary: '#ffffff',
-      secondary: '#b0b3c7',
+      primary: '#fafafa',
+      secondary: '#a1a1aa',
     },
+    divider: 'rgba(255, 255, 255, 0.08)',
   },
   typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-    h1: {
-      fontSize: '3rem',
-      fontWeight: 700,
-    },
-    h2: {
-      fontSize: '2.5rem',
-      fontWeight: 600,
-    },
-    h3: {
-      fontSize: '2rem',
-      fontWeight: 600,
-    },
-    h4: {
-      fontSize: '1.5rem',
-      fontWeight: 500,
-    },
+    fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    h1: { fontSize: '2.5rem', fontWeight: 700, letterSpacing: '-0.02em' },
+    h2: { fontSize: '2rem', fontWeight: 600, letterSpacing: '-0.01em' },
+    h3: { fontSize: '1.5rem', fontWeight: 600 },
+    button: { textTransform: 'none', fontWeight: 500 },
   },
   shape: {
-    borderRadius: 12,
+    borderRadius: 8,
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: 'none',
-          borderRadius: 8,
-          padding: '10px 24px',
+          borderRadius: 6,
+          padding: '8px 16px',
+          boxShadow: 'none',
+          '&:hover': {
+            boxShadow: 'none',
+          },
+        },
+        contained: {
+          backgroundColor: '#ffffff',
+          color: '#000000',
+          '&:hover': {
+            backgroundColor: '#e4e4e7',
+          },
         },
       },
     },
@@ -58,7 +55,16 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage: 'none',
-          borderRadius: 12,
+          backgroundColor: '#09090b',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          boxShadow: 'none',
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundImage: 'none',
         },
       },
     },

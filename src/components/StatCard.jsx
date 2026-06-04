@@ -1,22 +1,27 @@
 import { Card, CardContent, Typography, Box } from '@mui/material'
 
-const StatCard = ({ icon, title, value, color = 'primary.main' }) => {
+const StatCard = ({ icon, title, value }) => {
   return (
     <Card
       sx={{
         height: '100%',
-        background: `linear-gradient(135deg, ${color}22 0%, ${color}11 100%)`,
-        border: `1px solid ${color}44`,
+        bgcolor: 'transparent',
+        border: '1px solid rgba(255,255,255,0.05)',
+        boxShadow: 'none',
+        transition: 'border-color 0.2s',
+        '&:hover': {
+          borderColor: 'rgba(255,255,255,0.2)'
+        }
       }}
     >
-      <CardContent>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-          <Box sx={{ color }}>{icon}</Box>
-          <Typography variant="h6" color="text.secondary">
+      <CardContent sx={{ p: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
+          <Box sx={{ color: 'text.secondary', display: 'flex' }}>{icon}</Box>
+          <Typography variant="body2" color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 1, fontWeight: 500 }}>
             {title}
           </Typography>
         </Box>
-        <Typography variant="h3" fontWeight="bold">
+        <Typography variant="h3" fontWeight="800" sx={{ letterSpacing: '-0.02em', color: 'text.primary' }}>
           {value}
         </Typography>
       </CardContent>

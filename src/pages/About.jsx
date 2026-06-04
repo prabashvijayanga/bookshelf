@@ -2,147 +2,112 @@ import {
   Container,
   Typography,
   Box,
-  Paper,
   Grid,
   Chip,
   Avatar,
   Button,
 } from '@mui/material'
-import { GitHub, Favorite } from '@mui/icons-material'
+import { GitHub } from '@mui/icons-material'
 
 const About = () => {
   const techStack = {
-    frontend: [
-      'React 18',
-      'Material UI',
-      'React Router',
-      'Axios',
-      'LocalStorage API',
-    ],
+    frontend: ['React 18', 'Material UI', 'React Router', 'Axios', 'LocalStorage API'],
     api: ['Google Books API'],
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 6 }}>
+    <Container maxWidth="md" sx={{ py: 8 }}>
       {/* Header */}
-      <Box sx={{ textAlign: 'center', mb: 6 }}>
-        <Typography
-          variant="h3"
-          gutterBottom
-          fontWeight="bold"
-          sx={{
-            background: 'linear-gradient(45deg, #5c6bc0 30%, #ff4081 90%)',
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}
-        >
+      <Box sx={{ mb: 8 }}>
+        <Typography variant="h2" gutterBottom fontWeight="800">
           About BookShelf
         </Typography>
-        <Typography variant="h6" color="text.secondary">
-          Your personal library manager powered by Google Books
+        <Typography variant="h6" color="text.secondary" sx={{ fontWeight: 400 }}>
+          A modern library management architecture.
         </Typography>
       </Box>
 
       {/* Description */}
-      <Paper elevation={2} sx={{ p: 4, mb: 4 }}>
-        <Typography variant="body1" paragraph>
-          BookShelf is a modern, intuitive library management application that helps you organize,
-          track, and discover books. Built with React and Material UI, it provides a seamless
-          experience for managing your reading journey.
+      <Box sx={{ mb: 8, borderLeft: '2px solid rgba(255,255,255,0.1)', pl: 3 }}>
+        <Typography variant="body1" paragraph color="text.secondary" sx={{ fontSize: '1.1rem', lineHeight: 1.8 }}>
+          BookShelf is a privacy-first application built to help you track, organize, and discover books without the noise of social networks. Leveraging the Google Books API, it provides a seamless and persistent local experience for managing your reading journey.
         </Typography>
-        <Typography variant="body1" paragraph>
-          Search from millions of books using the Google Books API, organize them into custom
-          shelves, track your reading progress, set yearly goals, and write personal reviews.
-        </Typography>
-      </Paper>
-
-      {/* Features */}
-      <Paper elevation={2} sx={{ p: 4, mb: 4 }}>
-        <Typography variant="h5" gutterBottom fontWeight="bold">
-          Key Features
-        </Typography>
-        <Grid container spacing={2}>
-          {[
-            '📚 Search millions of books',
-            '📖 Organize into custom shelves',
-            '📊 Track reading progress',
-            '⭐ Rate and review books',
-            '🎯 Set yearly reading goals',
-            '💾 All data stored locally',
-            '🌙 Beautiful dark theme',
-            '📱 Fully responsive design',
-          ].map((feature, index) => (
-            <Grid item xs={12} sm={6} key={index}>
-              <Typography variant="body1">• {feature}</Typography>
-            </Grid>
-          ))}
-        </Grid>
-      </Paper>
+      </Box>
 
       {/* Tech Stack */}
-      <Paper elevation={2} sx={{ p: 4, mb: 4 }}>
-        <Typography variant="h5" gutterBottom fontWeight="bold">
-          Technology Stack
+      <Box sx={{ mb: 8 }}>
+        <Typography variant="h6" gutterBottom fontWeight="600" sx={{ mb: 3 }}>
+          System Architecture
         </Typography>
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="h6" color="primary" gutterBottom>
-            Frontend
-          </Typography>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-            {techStack.frontend.map((tech) => (
-              <Chip key={tech} label={tech} color="primary" variant="outlined" />
-            ))}
-          </Box>
-        </Box>
-        <Box>
-          <Typography variant="h6" color="secondary" gutterBottom>
-            API
-          </Typography>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-            {techStack.api.map((tech) => (
-              <Chip key={tech} label={tech} color="secondary" variant="outlined" />
-            ))}
-          </Box>
-        </Box>
-      </Paper>
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={6}>
+            <Typography variant="body2" color="text.secondary" gutterBottom sx={{ textTransform: 'uppercase', letterSpacing: 1 }}>
+              Client Layer
+            </Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+              {techStack.frontend.map((tech) => (
+                <Chip 
+                  key={tech} 
+                  label={tech} 
+                  variant="outlined" 
+                  size="small"
+                  sx={{ borderColor: 'rgba(255,255,255,0.1)', color: 'text.secondary' }} 
+                />
+              ))}
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography variant="body2" color="text.secondary" gutterBottom sx={{ textTransform: 'uppercase', letterSpacing: 1 }}>
+              Data Layer
+            </Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+              {techStack.api.map((tech) => (
+                <Chip 
+                  key={tech} 
+                  label={tech} 
+                  variant="outlined" 
+                  size="small"
+                  sx={{ borderColor: 'rgba(255,255,255,0.1)', color: 'text.secondary' }} 
+                />
+              ))}
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
 
       {/* Author */}
-      <Paper elevation={2} sx={{ p: 4, textAlign: 'center' }}>
+      <Box sx={{ p: 4, border: '1px solid rgba(255,255,255,0.1)', borderRadius: 2, display: 'flex', alignItems: 'center', gap: 3, flexWrap: 'wrap' }}>
         <Avatar
           sx={{
-            width: 100,
-            height: 100,
-            mx: 'auto',
-            mb: 2,
-            bgcolor: 'primary.main',
-            fontSize: '3rem',
+            width: 72,
+            height: 72,
+            bgcolor: '#ffffff',
+            color: '#000000',
+            fontWeight: 'bold',
+            fontSize: '1.5rem'
           }}
         >
-          👨‍💻
+          PV
         </Avatar>
-        <Typography variant="h5" gutterBottom fontWeight="bold">
-          Prabash Vijayanga
-        </Typography>
-        <Typography variant="body1" color="text.secondary" paragraph>
-          Full Stack Developer | React Enthusiast | Book Lover
-        </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1, mb: 2 }}>
-          <Favorite color="error" />
+        <Box sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" fontWeight="bold">
+            Prabash Vijayanga
+          </Typography>
           <Typography variant="body2" color="text.secondary">
-            Built with love for book enthusiasts
+            Full Stack Developer
           </Typography>
         </Box>
         <Button
-          variant="contained"
+          variant="outlined"
           startIcon={<GitHub />}
           href="https://github.com/prabashvijayanga"
           target="_blank"
           rel="noopener noreferrer"
+          sx={{ borderColor: 'rgba(255,255,255,0.2)', color: 'text.primary' }}
         >
-          View on GitHub
+          GitHub Profile
         </Button>
-      </Paper>
+      </Box>
     </Container>
   )
 }

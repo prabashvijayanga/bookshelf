@@ -11,7 +11,7 @@ import {
   DialogContent,
   DialogActions,
 } from '@mui/material'
-import { EmojiEvents, Edit } from '@mui/icons-material'
+import { TrackChanges, Edit } from '@mui/icons-material'
 
 const ReadingGoal = ({ goal, booksRead, onUpdateGoal }) => {
   const [open, setOpen] = useState(false)
@@ -26,59 +26,95 @@ const ReadingGoal = ({ goal, booksRead, onUpdateGoal }) => {
 
   return (
     <>
-      <Paper elevation={2} sx={{ p: 3 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <EmojiEvents color="primary" />
-            <Typography variant="h6">
-              {goal.year} Reading Goal
+      <Paper 
+        elevation={0} 
+        sx={{ 
+          p: 4, 
+          bgcolor: 'transparent',
+          border: '1px solid rgba(255,255,255,0.1)',
+          borderRadius: 2
+        }}
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <TrackChanges sx={{ color: 'text.secondary' }} />
+            <Typography variant="h6" fontWeight="600">
+              {goal.year} Objective
             </Typography>
           </Box>
           <Button
             size="small"
-            startIcon={<Edit />}
+            startIcon={<Edit fontSize="small" />}
             onClick={() => setOpen(true)}
+            sx={{ color: 'text.secondary', '&:hover': { color: 'text.primary', bgcolor: 'transparent' } }}
           >
-            Edit
+            Adjust
           </Button>
         </Box>
 
-        <Typography variant="h4" fontWeight="bold" sx={{ mb: 1 }}>
-          {booksRead} / {goal.target} Books
+        <Typography variant="h3" fontWeight="800" sx={{ mb: 1, letterSpacing: '-0.02em' }}>
+          {booksRead} <Typography component="span" variant="h5" color="text.secondary">/ {goal.target} Volumes</Typography>
         </Typography>
 
         <LinearProgress
           variant="determinate"
           value={progress}
-          sx={{ height: 10, borderRadius: 5, mb: 2 }}
+          sx={{ 
+            height: 6, 
+            borderRadius: 3, 
+            my: 3,
+            bgcolor: 'rgba(255,255,255,0.05)',
+            '& .MuiLinearProgress-bar': { bgcolor: 'text.primary' }
+          }}
         />
 
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" sx={{ textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.75rem' }}>
           {progress >= 100
-            ? '🎉 Goal achieved! Keep reading!'
-            : `${Math.ceil(goal.target - booksRead)} more to reach your goal`}
+            ? 'Target acquired. Excellent work.'
+            : `${Math.ceil(goal.target - booksRead)} volumes remaining to reach target.`}
         </Typography>
       </Paper>
 
-      {/* Edit Goal Dialog */}
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>Set Reading Goal</DialogTitle>
+      {/* Modernized Edit Goal Dialog */}
+      <Dialog 
+        open={open} 
+        onClose={() => setOpen(false)}
+        PaperProps={{
+          sx: {
+            bgcolor: '#09090b',
+            border: '1px solid rgba(255,255,255,0.1)',
+            backgroundImage: 'none',
+            minWidth: '300px'
+          }
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.05)', mb: 2 }}>
+          Update Target
+        </DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            label="Books to read in 2025"
+            label="Annual Volume Target"
             type="number"
             fullWidth
             value={newGoal}
             onChange={(e) => setNewGoal(Math.max(1, parseInt(e.target.value) || 1))}
             InputProps={{ inputProps: { min: 1 } }}
+            sx={{ 
+              mt: 1,
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': { borderColor: 'rgba(255,255,255,0.1)' },
+                '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.2)' },
+                '&.Mui-focused fieldset': { borderColor: 'text.primary' },
+              }
+            }}
           />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button onClick={handleSaveGoal} variant="contained">
-            Save Goal
+        <DialogActions sx={{ p: 2, pt: 0 }}>
+          <Button onClick={() => setOpen(false)} sx={{ color: 'text.secondary' }}>Cancel</Button>
+          <Button onClick={handleSaveGoal} variant="contained" sx={{ bgcolor: 'text.primary', color: 'background.default', '&:hover': { bgcolor: 'rgba(255,255,255,0.8)' } }}>
+            Confirm
           </Button>
         </DialogActions>
       </Dialog>

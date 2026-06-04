@@ -50,63 +50,60 @@ const Home = () => {
 
   const features = [
     {
-      icon: <Speed sx={{ fontSize: 40 }} />,
-      title: 'Fast Search',
-      description: 'Search millions of books instantly with Google Books API',
+      icon: <Speed sx={{ fontSize: 32 }} />,
+      title: 'Lightning Fast',
+      description: 'Search millions of books instantly via Google Books API.',
     },
     {
-      icon: <Security sx={{ fontSize: 40 }} />,
-      title: 'Secure & Private',
-      description: 'All your data is stored locally in your browser',
+      icon: <Security sx={{ fontSize: 32 }} />,
+      title: 'Local Privacy',
+      description: 'Zero tracking. All data is securely stored in your local environment.',
     },
     {
-      icon: <CloudOff sx={{ fontSize: 40 }} />,
-      title: 'No Account Required',
-      description: 'Start organizing your library without any registration',
+      icon: <CloudOff sx={{ fontSize: 32 }} />,
+      title: 'Frictionless',
+      description: 'No sign-ups, no passwords. Start organizing immediately.',
     },
     {
-      icon: <Star sx={{ fontSize: 40 }} />,
-      title: 'Track Progress',
-      description: 'Monitor your reading progress and set yearly goals',
+      icon: <Star sx={{ fontSize: 32 }} />,
+      title: 'Goal Tracking',
+      description: 'Monitor your reading volume and set ambitious yearly targets.',
     },
   ]
 
   return (
-    <Container maxWidth="xl" sx={{ py: 6 }}>
-      {/* Hero Section */}
-      <Box sx={{ textAlign: 'center', mb: 8 }}>
-        <Box
-          sx={{
-            fontSize: '6rem',
-            mb: 2,
-            animation: 'float 3s ease-in-out infinite',
-            '@keyframes float': {
-              '0%, 100%': { transform: 'translateY(0)' },
-              '50%': { transform: 'translateY(-20px)' },
-            },
+    <Container maxWidth="xl" sx={{ py: { xs: 6, md: 12 } }}>
+      {/* Premium Typography Hero */}
+      <Box sx={{ textAlign: 'center', mb: 12, maxWidth: '800px', mx: 'auto' }}>
+        <Box 
+          sx={{ 
+            display: 'inline-block', 
+            border: '1px solid rgba(255,255,255,0.1)', 
+            borderRadius: '100px', 
+            px: 2, 
+            py: 0.5, 
+            mb: 4 
           }}
         >
-          📚
+          <Typography variant="body2" color="text.secondary">
+            v1.0 is now live
+          </Typography>
         </Box>
-
         <Typography
-          variant="h2"
+          variant="h1"
           gutterBottom
           sx={{
-            fontWeight: 700,
-            background: 'linear-gradient(45deg, #5c6bc0 30%, #ff4081 90%)',
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            mb: 2,
+            fontWeight: 800,
+            color: 'text.primary',
+            mb: 3,
+            lineHeight: 1.1,
           }}
         >
-          Welcome to BookShelf
+          Your digital library, <br/>perfected.
         </Typography>
 
-        <Typography variant="h5" color="text.secondary" sx={{ mb: 4, maxWidth: 800, mx: 'auto' }}>
-          Your personal library manager. Search, organize, and track your reading journey
-          with millions of books at your fingertips.
+        <Typography variant="h6" color="text.secondary" sx={{ mb: 6, fontWeight: 400 }}>
+          Search, organize, and track your reading journey with a lightning-fast, privacy-first interface.
         </Typography>
 
         <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -116,7 +113,7 @@ const Home = () => {
             variant="contained"
             size="large"
             endIcon={<SearchIcon />}
-            sx={{ px: 4, py: 1.5 }}
+            sx={{ px: 4, py: 1.5, fontSize: '1rem' }}
           >
             Search Books
           </Button>
@@ -126,37 +123,39 @@ const Home = () => {
             variant="outlined"
             size="large"
             endIcon={<LocalLibrary />}
-            sx={{ px: 4, py: 1.5 }}
+            sx={{ 
+              px: 4, 
+              py: 1.5, 
+              fontSize: '1rem',
+              borderColor: 'rgba(255,255,255,0.2)',
+              color: 'text.primary',
+              '&:hover': { borderColor: 'text.primary' }
+            }}
           >
             My Library
           </Button>
         </Box>
       </Box>
 
-      {/* Features Section */}
-      <Box sx={{ mb: 8 }}>
-        <Typography variant="h4" align="center" gutterBottom fontWeight="bold" sx={{ mb: 4 }}>
-          Why Choose BookShelf?
-        </Typography>
+      {/* Features Section - Minimal Cards */}
+      <Box sx={{ mb: 12 }}>
         <Grid container spacing={3}>
           {features.map((feature, index) => (
             <Grid item xs={12} sm={6} md={3} key={index}>
               <Card
                 sx={{
                   height: '100%',
-                  textAlign: 'center',
-                  transition: 'transform 0.3s',
-                  '&:hover': {
-                    transform: 'translateY(-8px)',
-                  },
+                  bgcolor: 'transparent',
+                  border: 'none',
+                  textAlign: 'left',
                 }}
               >
-                <CardContent>
-                  <Box sx={{ color: 'primary.main', mb: 2 }}>{feature.icon}</Box>
-                  <Typography variant="h6" gutterBottom fontWeight="bold">
+                <CardContent sx={{ p: 0 }}>
+                  <Box sx={{ color: 'text.primary', mb: 2 }}>{feature.icon}</Box>
+                  <Typography variant="h6" gutterBottom fontWeight="600">
                     {feature.title}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
                     {feature.description}
                   </Typography>
                 </CardContent>
@@ -166,25 +165,30 @@ const Home = () => {
         </Grid>
       </Box>
 
-      {/* Trending Books Section */}
-      <Box>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography variant="h4" fontWeight="bold">
-            Trending Books
+      {/* Trending Books */}
+      <Box sx={{ mb: 12 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', mb: 4 }}>
+          <Typography variant="h3" fontWeight="700">
+            Trending now
           </Typography>
-          <Button component={Link} to="/search" endIcon={<ArrowForward />}>
-            View All
+          <Button 
+            component={Link} 
+            to="/search" 
+            endIcon={<ArrowForward />}
+            sx={{ color: 'text.secondary', '&:hover': { color: 'text.primary', bgcolor: 'transparent' } }}
+          >
+            View all
           </Button>
         </Box>
 
         {loading && (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
-            <CircularProgress />
+            <CircularProgress size={30} sx={{ color: 'text.secondary' }} />
           </Box>
         )}
 
         {error && (
-          <Alert severity="error" sx={{ mb: 3 }}>
+          <Alert severity="error" sx={{ mb: 3, bgcolor: 'transparent', border: '1px solid rgba(255,0,0,0.2)' }}>
             {error}
           </Alert>
         )}
@@ -198,37 +202,19 @@ const Home = () => {
         </Grid>
       </Box>
 
-      {/* How It Works Section */}
-      <Box sx={{ mt: 8, textAlign: 'center' }}>
-        <Typography variant="h4" gutterBottom fontWeight="bold" sx={{ mb: 4 }}>
-          How It Works
-        </Typography>
-        <Grid container spacing={4}>
+      {/* How It Works - Clean Numbering */}
+      <Box sx={{ pt: 6, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <Grid container spacing={6}>
           {[
-            { step: '1', title: 'Search Books', desc: 'Find any book from millions available' },
-            { step: '2', title: 'Add to Library', desc: 'Organize into Reading, Want to Read, or Read' },
-            { step: '3', title: 'Track Progress', desc: 'Monitor your reading and set goals' },
+            { step: '01', title: 'Search', desc: 'Query millions of titles via API.' },
+            { step: '02', title: 'Organize', desc: 'Categorize into custom reading states.' },
+            { step: '03', title: 'Track', desc: 'Monitor progress and rate your reads.' },
           ].map((item) => (
             <Grid item xs={12} md={4} key={item.step}>
-              <Box
-                sx={{
-                  width: 80,
-                  height: 80,
-                  borderRadius: '50%',
-                  background: 'linear-gradient(45deg, #5c6bc0 30%, #ff4081 90%)',
-                  color: 'white',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '2rem',
-                  fontWeight: 'bold',
-                  mx: 'auto',
-                  mb: 2,
-                }}
-              >
+              <Typography variant="h3" color="text.secondary" sx={{ mb: 2, opacity: 0.3, fontWeight: 800 }}>
                 {item.step}
-              </Box>
-              <Typography variant="h6" gutterBottom fontWeight="bold">
+              </Typography>
+              <Typography variant="h6" gutterBottom fontWeight="600">
                 {item.title}
               </Typography>
               <Typography variant="body2" color="text.secondary">

@@ -1,82 +1,82 @@
-import { Box, Button, Chip, Stack, Typography, Paper } from '@mui/material'
+import { Box, Button, Stack, Typography, Paper } from '@mui/material'
 import {
-  ShoppingCart,
-  MenuBook,
-  LocalLibrary,
-  Visibility,
-  Public,
-  AutoStories,
+  ShoppingCartOutlined,
+  MenuBookOutlined,
+  LocalLibraryOutlined,
+  VisibilityOutlined,
+  PublicOutlined,
+  ImportContactsOutlined,
 } from '@mui/icons-material'
-import { getReadingLinks, hasPreview, isPublicDomain } from '../utils/helpers'
+import { getReadingLinks } from '../utils/helpers'
+import { useNavigate } from 'react-router-dom'
 
 const WhereToReadButtons = ({ book }) => {
+  const navigate = useNavigate()
+  
   const links = getReadingLinks(book)
-  const hasPreviewAvailable = hasPreview(book.accessInfo)
-  const isPublicDomainBook = isPublicDomain(book.accessInfo)
 
   if (Object.keys(links).length === 0) {
     return null
   }
 
+  // Unified button style to kill the rainbow "AI" look
+  const actionBtnStyle = {
+    color: 'text.primary',
+    borderColor: 'rgba(255,255,255,0.1)',
+    justifyContent: 'flex-start',
+    px: 2,
+    py: 1.5,
+    '&:hover': {
+      borderColor: 'text.primary',
+      backgroundColor: 'rgba(255,255,255,0.05)',
+    },
+  }
+
   return (
-    <Paper elevation={2} sx={{ p: 3, mt: 3 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-        <AutoStories color="primary" />
-        <Typography variant="h6" fontWeight="bold">
-          Where to Read
+    <Paper 
+      elevation={0} 
+      sx={{ 
+        p: 3, 
+        mt: 3, 
+        bgcolor: 'transparent',
+        border: '1px solid rgba(255,255,255,0.1)',
+        borderRadius: 2
+      }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
+        <ImportContactsOutlined sx={{ color: 'text.secondary' }} />
+        <Typography variant="h6" fontWeight="600">
+          Acquisition Links
         </Typography>
       </Box>
 
-      {isPublicDomainBook && (
-        <Chip
-          icon={<Public />}
-          label="Public Domain - Free to Read"
-          color="success"
-          sx={{ mb: 2 }}
-        />
-      )}
-
-      {hasPreviewAvailable && (
-        <Chip
-          icon={<Visibility />}
-          label="Preview Available"
-          color="info"
-          sx={{ mb: 2, ml: isPublicDomainBook ? 1 : 0 }}
-        />
-      )}
-
-      <Stack spacing={2}>
+      <Stack spacing={1.5}>
         {/* Google Books Preview/Web Reader */}
         {links.webReader && (
           <Button
-            variant="contained"
-            startIcon={<MenuBook />}
+            variant="outlined"
+            startIcon={<MenuBookOutlined />}
             href={links.webReader}
             target="_blank"
             rel="noopener noreferrer"
             fullWidth
-            sx={{
-              background: 'linear-gradient(45deg, #4285f4 30%, #34a853 90%)',
-              '&:hover': {
-                background: 'linear-gradient(45deg, #3367d6 30%, #2d8f47 90%)',
-              },
-            }}
+            sx={actionBtnStyle}
           >
-            {isPublicDomainBook ? 'Read Free on Google Books' : 'Read Preview on Google Books'}
+            Google Books Reader
           </Button>
         )}
 
         {links.googlePreview && !links.webReader && (
           <Button
             variant="outlined"
-            startIcon={<Visibility />}
+            startIcon={<VisibilityOutlined />}
             href={links.googlePreview}
             target="_blank"
             rel="noopener noreferrer"
             fullWidth
-            color="primary"
+            sx={actionBtnStyle}
           >
-            Preview on Google Books
+            Preview Excerpt
           </Button>
         )}
 
@@ -84,14 +84,14 @@ const WhereToReadButtons = ({ book }) => {
         {links.googlePlay && (
           <Button
             variant="outlined"
-            startIcon={<ShoppingCart />}
+            startIcon={<ShoppingCartOutlined />}
             href={links.googlePlay}
             target="_blank"
             rel="noopener noreferrer"
             fullWidth
-            color="primary"
+            sx={actionBtnStyle}
           >
-            Buy on Google Play Books
+            Google Play Store
           </Button>
         )}
 
@@ -99,62 +99,73 @@ const WhereToReadButtons = ({ book }) => {
         {links.amazon && (
           <Button
             variant="outlined"
-            startIcon={<ShoppingCart />}
+            startIcon={<ShoppingCartOutlined />}
             href={links.amazon}
             target="_blank"
             rel="noopener noreferrer"
             fullWidth
-            sx={{
-              color: '#FF9900',
-              borderColor: '#FF9900',
-              '&:hover': {
-                borderColor: '#FF9900',
-                backgroundColor: 'rgba(255, 153, 0, 0.1)',
-              },
-            }}
+            sx={actionBtnStyle}
           >
-            View on Amazon
+            Amazon Listing
           </Button>
         )}
 
-        {/* Project Gutenberg (Public Domain) */}
+        {/* Project Gutenberg / Public Domain - IN APP READER */}
         {links.gutenberg && (
           <Button
             variant="contained"
-            startIcon={<Public />}
-            href={links.gutenberg}
-            target="_blank"
-            rel="noopener noreferrer"
+            startIcon={<ImportContactsOutlined />}
+            onClick={() => {
+              // Get the real EPUB link from Google Books API
+              const realEpubLink = book.accessInfo?.epub?.downloadLink;
+              
+              // Wrap it in your custom Vercel backend proxy
+              const proxiedLink = realEpubLink 
+                ? `https://bookshelf-backend-omega.vercel.app/api/proxy?url=${encodeURIComponent(realEpubLink)}` 
+                : null;
+              
+              navigate(`/read/${book.id}`, { 
+                state: { 
+                  title: book.volumeInfo?.title,
+                  epubUrl: proxiedLink 
+                } 
+              })
+            }}
             fullWidth
-            color="success"
+            sx={{
+              bgcolor: 'text.primary',
+              color: 'background.default',
+              borderColor: 'transparent',
+              justifyContent: 'flex-start',
+              px: 2,
+              py: 1.5,
+              '&:hover': {
+                bgcolor: 'rgba(255,255,255,0.8)',
+              },
+            }}
           >
-            Read Free on Project Gutenberg
+            Read Now in BookShelf
           </Button>
         )}
 
         {/* Library Link */}
-        <Button
-          variant="outlined"
-          startIcon={<LocalLibrary />}
-          href={`https://www.worldcat.org/search?q=${encodeURIComponent(book.volumeInfo?.title || '')}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          fullWidth
-          sx={{
-            color: '#7c3aed',
-            borderColor: '#7c3aed',
-            '&:hover': {
-              borderColor: '#7c3aed',
-              backgroundColor: 'rgba(124, 58, 237, 0.1)',
-            },
-          }}
-        >
-          Find at Your Local Library
-        </Button>
+        {links.worldcat && (
+          <Button
+            variant="outlined"
+            startIcon={<LocalLibraryOutlined />}
+            href={`https://www.worldcat.org/search?q=${encodeURIComponent(book.volumeInfo?.title || '')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            fullWidth
+            sx={actionBtnStyle}
+          >
+            Local Library Search
+          </Button>
+        )}
       </Stack>
 
-      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 2 }}>
-        Links open in a new tab. We are not affiliated with these services.
+      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 3, lineHeight: 1.5 }}>
+        External acquisition links open in a new tab. System is not affiliated with these providers.
       </Typography>
     </Paper>
   )

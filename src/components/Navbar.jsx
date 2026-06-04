@@ -19,7 +19,6 @@ import {
   Tooltip,
 } from '@mui/material'
 import {
-  MenuBook,
   Home,
   Search,
   LocalLibrary,
@@ -35,12 +34,13 @@ const Navbar = () => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
 
+  // Icons preserved for mobile drawer only
   const navItems = [
-    { path: '/', label: 'Home', icon: <Home /> },
-    { path: '/search', label: 'Search', icon: <Search /> },
-    { path: '/library', label: 'My Library', icon: <LocalLibrary /> },
-    { path: '/statistics', label: 'Statistics', icon: <BarChart /> },
-    { path: '/about', label: 'About', icon: <Info /> },
+    { path: '/', label: 'Overview', icon: <Home /> },
+    { path: '/search', label: 'Index', icon: <Search /> },
+    { path: '/library', label: 'Library', icon: <LocalLibrary /> },
+    { path: '/statistics', label: 'Telemetry', icon: <BarChart /> },
+    { path: '/about', label: 'Architecture', icon: <Info /> },
   ]
 
   const handleDrawerToggle = () => {
@@ -48,65 +48,75 @@ const Navbar = () => {
   }
 
   const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ width: 250 }}>
-      <Box sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-        <MenuBook sx={{ fontSize: 32, color: 'primary.main' }} />
-        <Typography variant="h6" color="primary">
-          BookShelf
+    <Box onClick={handleDrawerToggle} sx={{ width: 280, bgcolor: '#09090b', height: '100%', borderRight: '1px solid rgba(255,255,255,0.05)' }}>
+      <Box sx={{ p: 3, display: 'flex', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+        <Typography variant="h6" sx={{ fontWeight: 800, letterSpacing: '-0.02em' }}>
+          BookShelf.
         </Typography>
       </Box>
-      <List>
-        {navItems.map((item) => (
-          <ListItem key={item.path} disablePadding>
-            <ListItemButton
-              component={Link}
-              to={item.path}
-              selected={location.pathname === item.path}
-              sx={{
-                '&.Mui-selected': {
-                  backgroundColor: 'primary.main',
-                  color: 'white',
+      <List sx={{ px: 2, py: 3 }}>
+        {navItems.map((item) => {
+          const isActive = location.pathname === item.path
+          return (
+            <ListItem key={item.path} disablePadding sx={{ mb: 1 }}>
+              <ListItemButton
+                component={Link}
+                to={item.path}
+                sx={{
+                  borderRadius: 1,
+                  backgroundColor: isActive ? 'rgba(255,255,255,0.05)' : 'transparent',
+                  color: isActive ? 'text.primary' : 'text.secondary',
                   '&:hover': {
-                    backgroundColor: 'primary.dark',
+                    backgroundColor: 'rgba(255,255,255,0.08)',
+                    color: 'text.primary',
                   },
-                  '& .MuiListItemIcon-root': {
-                    color: 'white',
-                  },
-                },
-              }}
-            >
-              <ListItemIcon sx={{ color: 'primary.main' }}>
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText primary={item.label} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+                }}
+              >
+                <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText 
+                  primary={item.label} 
+                  primaryTypographyProps={{ fontWeight: isActive ? 600 : 500, fontSize: '0.9rem' }} 
+                />
+              </ListItemButton>
+            </ListItem>
+          )
+        })}
       </List>
     </Box>
   )
 
   return (
     <>
-      <AppBar position="sticky" elevation={0} sx={{ backdropFilter: 'blur(10px)', backgroundColor: 'rgba(26, 31, 58, 0.8)' }}>
+      <AppBar 
+        position="sticky" 
+        elevation={0} 
+        sx={{ 
+          backdropFilter: 'blur(12px)', 
+          backgroundColor: 'rgba(9, 9, 11, 0.7)',
+          borderBottom: '1px solid rgba(255,255,255,0.05)'
+        }}
+      >
         <Container maxWidth="xl">
-          <Toolbar disableGutters>
-            {/* Logo */}
-            <MenuBook sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, fontSize: 32 }} />
+          <Toolbar disableGutters sx={{ height: 64, minHeight: '64px !important' }}>
+            
+            {/* Desktop Logo */}
             <Typography
               variant="h6"
               noWrap
               component={Link}
               to="/"
               sx={{
-                mr: 4,
+                mr: 6,
                 display: { xs: 'none', md: 'flex' },
-                fontWeight: 700,
-                color: 'inherit',
+                fontWeight: 800,
+                color: 'text.primary',
                 textDecoration: 'none',
+                letterSpacing: '-0.02em'
               }}
             >
-              BookShelf
+              BookShelf.
             </Typography>
 
             {/* Mobile Menu Icon */}
@@ -115,67 +125,73 @@ const Navbar = () => {
                 size="large"
                 onClick={handleDrawerToggle}
                 color="inherit"
+                edge="start"
               >
                 <MenuIcon />
               </IconButton>
             </Box>
 
             {/* Mobile Logo */}
-            <MenuBook sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
             <Typography
               variant="h6"
               noWrap
               component={Link}
               to="/"
               sx={{
-                mr: 2,
                 display: { xs: 'flex', md: 'none' },
                 flexGrow: 1,
-                fontWeight: 700,
-                color: 'inherit',
+                fontWeight: 800,
+                color: 'text.primary',
                 textDecoration: 'none',
+                letterSpacing: '-0.02em'
               }}
             >
-              BookShelf
+              BookShelf.
             </Typography>
 
-            {/* Desktop Menu */}
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, gap: 1 }}>
-              {navItems.map((item) => (
-                <Button
-                  key={item.path}
-                  component={Link}
-                  to={item.path}
-                  startIcon={item.icon}
-                  sx={{
-                    color: 'white',
-                    backgroundColor: location.pathname === item.path ? 'primary.main' : 'transparent',
-                    '&:hover': {
-                      backgroundColor: location.pathname === item.path ? 'primary.dark' : 'rgba(92, 107, 192, 0.1)',
-                    },
-                  }}
-                >
-                  {item.label}
-                </Button>
-              ))}
+            {/* Desktop Nav Links (Text Only) */}
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, gap: 3 }}>
+              {navItems.map((item) => {
+                const isActive = location.pathname === item.path
+                return (
+                  <Button
+                    key={item.path}
+                    component={Link}
+                    to={item.path}
+                    disableRipple
+                    sx={{
+                      color: isActive ? 'text.primary' : 'text.secondary',
+                      fontWeight: isActive ? 600 : 500,
+                      fontSize: '0.85rem',
+                      px: 0,
+                      minWidth: 'auto',
+                      backgroundColor: 'transparent !important',
+                      '&:hover': {
+                        color: 'text.primary',
+                      },
+                    }}
+                  >
+                    {item.label}
+                  </Button>
+                )
+              })}
             </Box>
 
-            {/* GitHub Link - UPDATED */}
+            {/* GitHub Repo Link */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Tooltip title="View Source on GitHub">
+              <Tooltip title="View Source Architecture">
                 <IconButton
                   component="a"
                   href="https://github.com/prabashvijayanga/bookshelf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  color="inherit"
+                  size="small"
                   sx={{
-                    '&:hover': {
-                      color: 'primary.light',
-                    },
+                    color: 'text.secondary',
+                    '&:hover': { color: 'text.primary', bgcolor: 'rgba(255,255,255,0.05)' },
                   }}
                 >
-                  <GitHub />
+                  <GitHub fontSize="small" />
                 </IconButton>
               </Tooltip>
             </Box>
@@ -188,12 +204,10 @@ const Navbar = () => {
         variant="temporary"
         open={mobileOpen}
         onClose={handleDrawerToggle}
-        ModalProps={{
-          keepMounted: true,
-        }}
+        ModalProps={{ keepMounted: true }}
         sx={{
           display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 250, backgroundColor: 'background.paper' },
+          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 280, bgcolor: '#09090b' },
         }}
       >
         {drawer}

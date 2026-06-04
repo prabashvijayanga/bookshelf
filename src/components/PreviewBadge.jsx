@@ -1,5 +1,5 @@
 import { Chip } from '@mui/material'
-import { Visibility, MenuBook, Public } from '@mui/icons-material'
+import { Visibility, Public } from '@mui/icons-material'
 import { hasPreview, isPublicDomain } from '../utils/helpers'
 
 const PreviewBadge = ({ book, sx = {} }) => {
@@ -7,14 +7,26 @@ const PreviewBadge = ({ book, sx = {} }) => {
   const hasPreviewAvailable = hasPreview(accessInfo)
   const isPublicDomainBook = isPublicDomain(accessInfo)
 
+  const commonStyles = {
+    bgcolor: 'rgba(0, 0, 0, 0.7)',
+    backdropFilter: 'blur(4px)',
+    border: '1px solid rgba(255,255,255,0.15)',
+    color: 'text.primary',
+    fontWeight: 600,
+    fontSize: '0.7rem',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    ...sx
+  }
+
   if (isPublicDomainBook) {
     return (
       <Chip
-        icon={<Public />}
-        label="Free to Read"
+        icon={<Public sx={{ color: 'text.secondary', fontSize: '1rem !important' }} />}
+        label="Public Domain"
         size="small"
-        color="success"
-        sx={{ ...sx }}
+        variant="outlined"
+        sx={commonStyles}
       />
     )
   }
@@ -22,11 +34,11 @@ const PreviewBadge = ({ book, sx = {} }) => {
   if (hasPreviewAvailable) {
     return (
       <Chip
-        icon={<Visibility />}
+        icon={<Visibility sx={{ color: 'text.secondary', fontSize: '1rem !important' }} />}
         label="Preview Available"
         size="small"
-        color="info"
-        sx={{ ...sx }}
+        variant="outlined"
+        sx={commonStyles}
       />
     )
   }
