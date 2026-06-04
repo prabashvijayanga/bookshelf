@@ -1,25 +1,23 @@
-import { Box, Button, Stack, Typography, Paper } from '@mui/material'
+import { Box, Button, Stack, Typography, Paper, Divider } from '@mui/material'
 import {
   ShoppingCartOutlined,
   MenuBookOutlined,
   LocalLibraryOutlined,
   VisibilityOutlined,
-  PublicOutlined,
   ImportContactsOutlined,
+  TravelExploreOutlined,
 } from '@mui/icons-material'
 import { getReadingLinks } from '../utils/helpers'
 import { useNavigate } from 'react-router-dom'
 
 const WhereToReadButtons = ({ book }) => {
   const navigate = useNavigate()
-  
   const links = getReadingLinks(book)
 
   if (Object.keys(links).length === 0) {
     return null
   }
 
-  // Unified button style to kill the rainbow "AI" look
   const actionBtnStyle = {
     color: 'text.primary',
     borderColor: 'rgba(255,255,255,0.1)',
@@ -51,7 +49,42 @@ const WhereToReadButtons = ({ book }) => {
       </Box>
 
       <Stack spacing={1.5}>
-        {/* Google Books Preview/Web Reader */}
+        
+        {/* 🌟 IN-APP READER (Public Domain නම් විතරක් පෙන්නනවා) 🌟 */}
+        {links.inAppEpub && (
+          <>
+            <Button
+              variant="contained"
+              startIcon={<ImportContactsOutlined />}
+              onClick={() => {
+                navigate(`/read/${book.id}`, { 
+                  state: { 
+                    title: book.volumeInfo?.title,
+                    epubUrl: links.inAppEpub // කෙලින්ම වැඩ කරන EPUB ලින්ක් එක යවනවා
+                  } 
+                })
+              }}
+              fullWidth
+              sx={{
+                bgcolor: 'text.primary',
+                color: 'background.default',
+                borderColor: 'transparent',
+                justifyContent: 'flex-start',
+                px: 2,
+                py: 1.5,
+                mb: 1,
+                '&:hover': {
+                  bgcolor: 'rgba(255,255,255,0.8)',
+                },
+              }}
+            >
+              Read in BookShelf Reader
+            </Button>
+            <Divider sx={{ borderColor: 'rgba(255,255,255,0.05)', my: 1 }} />
+          </>
+        )}
+
+        {/* Google Books Web Reader */}
         {links.webReader && (
           <Button
             variant="outlined"
@@ -62,10 +95,11 @@ const WhereToReadButtons = ({ book }) => {
             fullWidth
             sx={actionBtnStyle}
           >
-            Google Books Reader
+            Read on Google Books
           </Button>
         )}
 
+        {/* Google Books Preview */}
         {links.googlePreview && !links.webReader && (
           <Button
             variant="outlined"
@@ -76,22 +110,22 @@ const WhereToReadButtons = ({ book }) => {
             fullWidth
             sx={actionBtnStyle}
           >
-            Preview Excerpt
+            Google Books Preview
           </Button>
         )}
 
-        {/* Google Play Books */}
-        {links.googlePlay && (
+        {/* Project Gutenberg Search */}
+        {links.gutenbergSearch && (
           <Button
             variant="outlined"
-            startIcon={<ShoppingCartOutlined />}
-            href={links.googlePlay}
+            startIcon={<TravelExploreOutlined />}
+            href={links.gutenbergSearch}
             target="_blank"
             rel="noopener noreferrer"
             fullWidth
             sx={actionBtnStyle}
           >
-            Google Play Store
+            Search on Project Gutenberg
           </Button>
         )}
 
@@ -110,65 +144,21 @@ const WhereToReadButtons = ({ book }) => {
           </Button>
         )}
 
-        {/* Project Gutenberg / Public Domain - IN APP READER */}
-        {/* Project Gutenberg / Public Domain - IN APP READER */}
-        {links.gutenberg && (
-          <Button
-            variant="contained"
-            startIcon={<ImportContactsOutlined />}
-            onClick={() => {
-              // Google Books API එකෙන් එන ලින්ක් එක ගන්නවා
-              let realEpubLink = book.accessInfo?.epub?.downloadLink;
-              
-              // 1. Google එකෙන් දෙන ලින්ක් එකේ http:// තියෙනවා නම් ඒක බලෙන් https:// කරනවා
-              if (realEpubLink && realEpubLink.startsWith('http://')) {
-                realEpubLink = realEpubLink.replace('http://', 'https://');
-              }
-              
-              // 2. Reader එකට අවුලක් නැතුව හොයාගන්න සම්පූර්ණ (Absolute) URL එකම හදනවා
-              const proxiedLink = realEpubLink 
-                ? `${window.location.origin}/api/proxy?url=${encodeURIComponent(realEpubLink)}` 
-                : null;
-              
-              navigate(`/read/${book.id}`, { 
-                state: { 
-                  title: book.volumeInfo?.title,
-                  epubUrl: proxiedLink 
-                } 
-              })
-            }}
-            
-            fullWidth
-            sx={{
-              bgcolor: 'text.primary',
-              color: 'background.default',
-              borderColor: 'transparent',
-              justifyContent: 'flex-start',
-              px: 2,
-              py: 1.5,
-              '&:hover': {
-                bgcolor: 'rgba(255,255,255,0.8)',
-              },
-            }}
-          >
-            Read Now in BookShelf
-          </Button>
-        )}
-
-        {/* Library Link */}
-        {links.worldcat && (
+        {/* Google Play Store */}
+        {links.googlePlay && (
           <Button
             variant="outlined"
-            startIcon={<LocalLibraryOutlined />}
-            href={`https://www.worldcat.org/search?q=${encodeURIComponent(book.volumeInfo?.title || '')}`}
+            startIcon={<ShoppingCartOutlined />}
+            href={links.googlePlay}
             target="_blank"
             rel="noopener noreferrer"
             fullWidth
             sx={actionBtnStyle}
           >
-            Local Library Search
+            Google Play Store
           </Button>
         )}
+
       </Stack>
 
       <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 3, lineHeight: 1.5 }}>

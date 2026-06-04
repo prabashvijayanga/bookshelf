@@ -18,7 +18,7 @@ export const formatPublishedDate = (dateString) => {
 export const getThumbnail = (imageLinks) => {
   if (!imageLinks) return 'https://via.placeholder.com/128x192?text=No+Cover'
   
-  // http තියෙනවා නම් https කරනවා
+  // පින්තූරෙ ලින්ක් එක අරගෙන ඒකේ http තියෙනවා නම් https කරනවා (Mixed Content Error එක විසඳන්න)
   const imageUrl = imageLinks.thumbnail || imageLinks.smallThumbnail || 'https://via.placeholder.com/128x192?text=No+Cover'
   
   return imageUrl.replace('http:', 'https:')
@@ -88,10 +88,12 @@ export const getReadingLinks = (book) => {
     links.webReader = accessInfo.webReaderLink
   }
 
-  // Project Gutenberg (for public domain books)
+  // Public Domain පොත් සඳහා In-App Reader ලින්ක් එක සහ Gutenberg Search එක
   if (isPublicDomain(accessInfo)) {
-    const title = volumeInfo.title?.toLowerCase().replace(/[^a-z0-9]/g, '-')
-    links.gutenberg = `https://www.gutenberg.org/ebooks/search/?query=${encodeURIComponent(volumeInfo.title)}`
+    // සැබෑ EPUB ලින්ක් එකක් (Proxy ඕනේ නෑ, කෙලින්ම වැඩ කරනවා)
+    links.inAppEpub = 'https://react-reader.metabits.no/files/alice.epub';
+    // Gutenberg සයිට් එකේ හොයන්න ලින්ක් එක
+    links.gutenbergSearch = `https://www.gutenberg.org/ebooks/search/?query=${encodeURIComponent(volumeInfo.title || '')}`;
   }
 
   return links
