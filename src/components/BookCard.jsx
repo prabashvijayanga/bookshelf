@@ -47,7 +47,7 @@ const BookCard = ({ book, onAddToShelf, showShelf = false, currentShelf }) => {
   }
 
   const volumeInfo = book.volumeInfo || {}
-  const thumbnail = getThumbnail(volumeInfo.imageLinks)
+  const thumbnail = getThumbnail(volumeInfo.imageLinks)?.replace('http:', 'https:')
   const authors = formatAuthors(volumeInfo.authors)
   const title = volumeInfo.title || 'Untitled'
   const description = truncateText(volumeInfo.description, 100)

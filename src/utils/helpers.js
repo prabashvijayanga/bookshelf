@@ -17,7 +17,11 @@ export const formatPublishedDate = (dateString) => {
 
 export const getThumbnail = (imageLinks) => {
   if (!imageLinks) return 'https://via.placeholder.com/128x192?text=No+Cover'
-  return imageLinks.thumbnail || imageLinks.smallThumbnail || 'https://via.placeholder.com/128x192?text=No+Cover'
+  
+  // http තියෙනවා නම් https කරනවා
+  const imageUrl = imageLinks.thumbnail || imageLinks.smallThumbnail || 'https://via.placeholder.com/128x192?text=No+Cover'
+  
+  return imageUrl.replace('http:', 'https:')
 }
 
 export const truncateText = (text, maxLength = 150) => {
@@ -41,19 +45,19 @@ export const calculateReadingStats = (library) => {
   return { totalBooks, booksRead, currentlyReading, wantToRead }
 }
 
-// 🆕 NEW: Check if book has preview available
+// Check if book has preview available
 export const hasPreview = (accessInfo) => {
   if (!accessInfo) return false
   return accessInfo.viewability === 'PARTIAL' || accessInfo.viewability === 'ALL_PAGES'
 }
 
-// 🆕 NEW: Check if book is public domain
+// Check if book is public domain
 export const isPublicDomain = (accessInfo) => {
   if (!accessInfo) return false
   return accessInfo.publicDomain === true || accessInfo.accessViewStatus === 'FULL_PUBLIC_DOMAIN'
 }
 
-// 🆕 NEW: Get reading links for a book
+// Get reading links for a book
 export const getReadingLinks = (book) => {
   const volumeInfo = book.volumeInfo || {}
   const accessInfo = book.accessInfo || {}
@@ -93,7 +97,7 @@ export const getReadingLinks = (book) => {
   return links
 }
 
-// 🆕 NEW: Format book for library with reading status
+// Format book for library with reading status
 export const formatBookForLibrary = (bookData) => {
   return {
     id: bookData.id,

@@ -109,7 +109,7 @@ const BookDetailsPage = () => {
         <Grid item xs={12} md={3}>
           <Box
             component="img"
-            src={getThumbnail(volumeInfo.imageLinks)}
+            src={getThumbnail(volumeInfo.imageLinks)?.replace('http:', 'https:')}
             alt={volumeInfo.title}
             sx={{ 
               width: '100%', 
